@@ -35,3 +35,5 @@ Installation steps:
     RewriteCond %{SERVER_PORT} 80<br/>
     RewriteRule ^(.*)$ https://fqdn/$1 [R,L]<br/>
     ErrorDocument 404 https://fqdn/404.html<br/>
+    
+5. Import the export_template.sql to MySQL as the table template
