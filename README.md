@@ -9,29 +9,29 @@ Installation steps:
 1. chmod /site_photo directory for 755 for directory and 655 for files
 2. modify config.php
 
-    $protocol = "https://";
-    $rootpath = "domain name";
-
-    $mysql_server = "<host>";
-    $mysql_username = "<mysql account>";
-    $mysql_password = "<mysql_password>";
-    $mysql_db = "<table>";
-    
+    $protocol = "https://";<br/>
+    $rootpath = "domain name";<br/>
+<br/><br/>
+    $mysql_server = "<host>";<br/>
+    $mysql_username = "<mysql account>";<br/>
+    $mysql_password = "<mysql_password>";<br/>
+    $mysql_db = "<table>";<br/>
+    <br/><br/>
 3. modify authenticate.php
 
-   $DATABASE_HOST = '<host>';
-   $DATABASE_USER = '<mysql_account>';
-   $DATABASE_PASS = '<mysql_password>';
-   $DATABASE_NAME = '<table>';
+   $DATABASE_HOST = '<host>';<br/>
+   $DATABASE_USER = '<mysql_account>';<br/>
+   $DATABASE_PASS = '<mysql_password>';<br/>
+   $DATABASE_NAME = '<table>';<br/>
    
 4.  Add .htaccess to root directory for URLRewrite
 
-    AddType application/x-httpd-php .html .htm
-    RewriteEngine On
-    RewriteRule ^site/([^/]*)/([^/]*)$ /site.html?id=$1&sort=$2 [L]
-    RewriteRule ^phone/([^/]*)/([^/]*)$ /phone.html?site=$1&phone=$2 [L]
-    RewriteRule ^add/([^/]*)$ /addcustom.html?id=$1 [L]
-    RewriteRule ^report/([^/]*)/([^/]*)$ /report.php?id=$1&type=$2 [L]
-    RewriteCond %{SERVER_PORT} 80
-    RewriteRule ^(.*)$ https://fqdn/$1 [R,L]
-    ErrorDocument 404 https://fqdn/404.html
+    AddType application/x-httpd-php .html .htm<br/>
+    RewriteEngine On<br/>
+    RewriteRule ^site/([^/]*)/([^/]*)$ /site.html?id=$1&sort=$2 [L]<br/>
+    RewriteRule ^phone/([^/]*)/([^/]*)$ /phone.html?site=$1&phone=$2 [L]<br/>
+    RewriteRule ^add/([^/]*)$ /addcustom.html?id=$1 [L]<br/>
+    RewriteRule ^report/([^/]*)/([^/]*)$ /report.php?id=$1&type=$2 [L]<br/>
+    RewriteCond %{SERVER_PORT} 80<br/>
+    RewriteRule ^(.*)$ https://fqdn/$1 [R,L]<br/>
+    ErrorDocument 404 https://fqdn/404.html<br/>
