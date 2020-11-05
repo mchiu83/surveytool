@@ -12,14 +12,14 @@ Installation steps:
     $protocol = "https://"; <br/>
     $rootpath = "domain name"; <br/>
 
-    $mysql_server = "<host>"; <br/>
+    $mysql_server = "<host_address>"; <br/>
     $mysql_username = "<mysql account>"; <br/>
     $mysql_password = "<mysql_password>"; <br/>
     $mysql_db = "<table_name>"; <br/>
 
 3. modify authenticate.php
 
-   $DATABASE_HOST = "<host>"; <br/>
+   $DATABASE_HOST = "<host_address>"; <br/>
    $DATABASE_USER = "<mysql_account>"; <br/>
    $DATABASE_PASS = "<mysql_password>"; <br/>
    $DATABASE_NAME = "<table_name>"; <br/>
