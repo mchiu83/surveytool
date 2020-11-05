@@ -1,0 +1,88 @@
+<?php require("config.php"); ?>
+<?php include("header.php"); ?>
+
+<!-- Reset Password Page -->
+<div class="bg-img-overlay">
+	<div class="overlay"></div>
+	<img src="<?php echo $protocol . $rootpath . "/" ?>assets/img/spalsh.jpg">
+</div>
+<div class="rel zindex5">
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12">
+			<div id="login-logo">
+				<img src="<?php echo $protocol . $rootpath . "/" ?>assets/img/nslogo800.svg" class="img-responsive center-block">
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+			<div class="login-form form">
+				<form>
+					<div class="form-group ico">
+						<input type="email" class="form-control" value="<?php echo $_SESSION['email'];?>" disabled>
+						<i class="fa fa-user ico"></i>
+					</div>
+					<div class="form-group ico">
+						<input autocomplete="off" id="pwdId" type="password" pattern=".{3,}" class="form-control" placeholder="password" required autofocus>
+						<i class="fa fa-lock ico"></i>
+					</div>
+					<div class="form-group ico">
+						<input autocomplete="off" id="cPwdId" type="password" pattern=".{3,}" class="form-control" placeholder="confirm password" required>
+						<i class="fa fa-lock ico"></i>
+					</div>
+					<div class="form-group martop20">
+						<button id="submitBtn" type="button" class="btn btn-lg btn-block" onclick="hash()" disabled>Reset Password</button>
+					</div>
+					<div class="form-group">
+						<div class="alert alert-warning" role="alert" hidden>
+						 	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						 	<strong>Validation !</strong> please fill the field
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+	<?php include("javascript.php"); ?>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		  // Check if passwords match
+			  $('#pwdId, #cPwdId').on('keyup', function () {
+				if ($('#pwdId').val() != '' && $('#cPwdId').val() != '' && $('#pwdId').val() == $('#cPwdId').val()) {
+				  $("#submitBtn").attr("disabled",false);
+				  $('.pwds').removeClass('is-invalid')
+				} else {
+				  $("#submitBtn").attr("disabled",true);
+				  $('.pwds').addClass('is-invalid')
+				  }
+			  });
+		  });
+		  
+		function hash(){
+			var password = document.getElementById("cPwdId").value;
+			var xhr = new XMLHttpRequest();
+			var url = "https://fqdn/password-reset.php?password=" + password
+			xhr.open('GET', url, true);
+			xhr.onload = function() {
+				switch(xhr.responseText) {
+					case "Success":
+						window.location.href = "index.html"; 
+						break;
+					default:
+						
+						break;
+				}
+			}
+			xhr.send();
+	
+
+		}
+	</script>
+	
+</body>
+</html>

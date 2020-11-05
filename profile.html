@@ -1,0 +1,151 @@
+<?php require("config.php"); ?>
+<?php include("header.php"); ?>
+
+<!-- Navbar Header -->
+<div id="cat-header" class="container-fluid fixed">
+	<div class="menu main-menu">
+		<div class="row">
+			<div class="col-xs-4 text-left"><a class="menu-toggle left" href="#left-menu"> MENU</a></div>
+			<div class="col-xs-4 text-center title">PROFILE</div>
+			<div class="col-xs-4 text-right"><a href="<?php echo $protocol . $rootpath . "/" ?>logout.php" >LOGOUT</a></div>
+		</div>
+	</div>
+	
+<!-- Menu Header -->
+	<div class="menu">
+		<div class="row">
+			<div class="horizontal-scroll owl-carousel">
+				<a href="#" class="menu-deco item">Contact us</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- left drawer menu -->
+<?php include("menu.php"); ?>
+<!-- left drawer menu end -->
+
+
+<!-- Profile -->
+<div class="container-fluid profile">
+	<div class="row bgwhite">
+		<div class="col-sm-12">
+			<div class="content padbox">
+				<div class="clearfix">
+					<img src="assets/img/profile.png" align="left" class="profile-pic">
+					<h3 class="user"><?php echo $_SESSION['firstname'] . " " . $_SESSION['lastname']; ?></h3>
+					<h5 class="subtitle"><?php echo $_SESSION['permission']; ?></h5>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row credentials bgwhite">
+		<div class="col-sm-12">
+			<div class="content padbox">
+				<h4 class="title">Contact info</h4>
+				<p>
+					<span class="ico"><i class="fa fa-phone" aria-hidden="true"></i></span> <?php echo $_SESSION['phone']; ?>
+				</p>
+				<p>
+					<span class="ico"><i class="fa fa-envelope" aria-hidden="true"></i></span> <?php echo $_SESSION['email']; ?>
+				</p>
+				<p>
+					<span class="ico"><i class="fa fa-map-marker" aria-hidden="true"></i></span> <?php echo $_SESSION['city'] . ", " . $_SESSION['state']; ?>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="img-section-heading row">
+		<img src="assets/banner/3.jpg" class="img">
+		<div class="overlay"></div>
+		<div class="col-xs-2 text-center">
+			<span class="ico">
+				<i class="fa fa-eye" aria-hidden="true"></i>
+			</span>
+		</div>
+		<div class="col-xs-10">
+			<h2 class="title">Recently viewed</h2>
+		</div>
+	</div>
+
+	<?php
+		$sql = "select phone_views.timestamp, sites.id AS site_id, phones.phone_id, phones.Directory_Number, phones.NAME_on_directory_number AS phonename, phone_updates.phonename, phone_updates.note, sites.name, phone_updates.thumb_url
+					from phone_views
+					LEFT JOIN
+					phones ON phones.phone_id = phone_views.phone_id
+					LEFT JOIN
+					phone_updates ON phone_updates.phone_id = phone_views.phone_id
+					LEFT JOIN
+					sites on sites.id = phone_views.site_id
+					ORDER BY phone_views.timestamp DESC
+					LIMIT 5";
+		$result = mysqli_query($con,$sql);	
+		
+		echo "<div class='row bgwhite martop'>";
+		echo "<ul class='listing'>";
+		
+		while($row = mysqli_fetch_array($result)) {
+		
+			echo "	<ul class='listing'>";
+			echo "		<li>";
+			echo "			<a href='" . $protocol . $rootpath . "/phone/" . $row['site_id'] .  "/" . $row['phone_id'] ."' class='row'>";
+			echo "				<div class='col-xs-4'>";
+			echo "					<div class='banner'>";
+			if(isset($row['thumb_url'])){
+				echo "						<img class='img-responsive lazy' data-original='" . $row['thumb_url'] . "'>";
+			} else {
+				echo "						<img class='img-responsive lazy' data-original='http://via.placeholder.com/300x250?text=Survey+Me'>";
+			}
+			echo "					</div>";
+			echo "				</div>";
+			echo "				<div class='col-xs-8'>";
+			echo "					<div class='content'>";
+			echo "						<h4 class='title'>" . $row['NAME_on_directory_number'] . "</h4>";
+			echo "						<p class='subtitle'>";
+			echo "							<span class='ico'><i class='fa fa-map-marker' aria-hidden='true'></i></span>" . $row['name'];			
+			echo "						</p>";
+			echo "						<p class='subtitle'>";
+			echo "							<span class='ico'><i class='fa fa-phone' aria-hidden='true'></i></span>" . $row['Directory_Number'] . "</p>";
+			echo "						<p class='subtitle'>";
+			echo 						"ID: " . $row['phone_id'] . "</p>";
+			echo "						<p class='subtitle'>";
+			$timestamp = strtotime($row['timestamp'] . ' ' . 'America/Chicago');
+			echo 						"Viewed: " . date("M-d-Y H:i:s",$timestamp) . "</p>";
+			echo "						<p class='subtitle'>";
+			echo 						"Notes: " . $row['notes'] . "</p>";	
+			echo "					</div>";
+			echo "				</div>";
+			echo "			</a>";
+			echo "		</li>";
+			echo "	</ul>";
+		
+		}
+		echo "</ui>";
+		echo "</div>";
+	?>
+
+	<?php include("javascript.php"); ?>
+	<script type="text/javascript">
+
+		$(".loadmore").on("click",function(){
+			var dom = $("#"+$(this).attr("data-loader"));
+			if (dom.length){
+				$(dom).addClass("pop");
+				setTimeout(function(){
+					dom.removeClass("pop");
+				},Math.random()*3000);
+			}
+		});
+
+		$(".btn-atoz").on("click",function(){
+			$("#atozpop").addClass("pop");
+		});
+		
+	</script>
+</body>
+
+<?php
+$con -> close();
+?>

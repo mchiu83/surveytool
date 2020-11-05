@@ -1,0 +1,476 @@
+<?php require("config.php"); ?>
+<?php include("header.php"); ?>
+
+<!-- Grab phone table name -->
+<?php
+	$SITE_ID = $_GET['id'];
+	$SORT = $_GET['sort'];
+	$sql = "SELECT table_name, name FROM sites WHERE id=" . $SITE_ID;
+	$result = mysqli_query($con,$sql);
+	while($row = mysqli_fetch_assoc($result)) {
+		$TABLE_NAME = $row['table_name'];
+		$SITE_NAME = $row['name'];
+	}
+?>
+
+<!-- Navbar Header -->
+<div id="cat-header" class="container-fluid fixed">
+	<div class="menu main-menu">
+		<div class="row">
+			<div class="col-xs-4 text-left"><a class="menu-toggle left" href="#left-menu"> MENU</a></div>
+			<div class="col-xs-4 text-center title"><?php echo $SITE_NAME; ?></div>
+			<div class="col-xs-4 text-right"><a href="<?php echo $protocol . $rootpath . "/" ?>logout.php" >LOGOUT</a></div>
+		</div>
+	</div>
+	
+<!-- Menu Header -->
+	<div class="menu">
+		<div class="row">
+			<div class="horizontal-scroll owl-carousel">
+				<a href="<?php echo $protocol . $rootpath . "/site/" . $SITE_ID . "/none" ?>" class="menu-deco item openit">Back</a>
+				<a data-open="#atozpop" class="menu-deco item openit">Site Summary</a>
+				<a data-open="#enquirepop" class="menu-deco item openit">Notes</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- left drawer menu -->
+<?php include("menu.php"); ?>
+<!-- left drawer menu end -->
+
+<!-- Cat search bar -->
+<div class="cat-search-bar fixed parallax-banner form">
+	<!-- <img class="overlay-img" src="http://via.placeholder.com/800x220"> -->
+	<div class="content">
+		<div class="form-group img">
+			<img class="search-logo" src="<?php echo $protocol . $rootpath . "/" ?>assets/img/location.svg">
+			<input type="text" id="search" class="form-control" placeholder="Search :">
+		</div>
+	</div>
+</div>
+
+<!-- Listing -->
+<div class="parallax-scroller">
+	<div class="container-fluid">
+		<form id="add-survey" enctype="multipart/form-data" method="post">
+			<div id="add-survey-form" class="reviews">
+				<div class="form-group">
+					<label for="phonenameform">Phone Name</label>
+					<input type="text" id="phonenameform" class="form-control" required value="<?php echo $Phone_Name; ?>">
+				</div>
+				<div class="form-group">
+					<label for="typeform">Model</label>
+					<select class="form-control" id="typeform" name="typeform">
+						<option value="7841">7841</option>
+						<option value="8841">8841</option>
+						<option value="8851">8851</option>
+						<option value="8865">8865</option>
+						<option value="8831">8831</option>
+						<option value="8821">8821</option>
+						<option value="Fax">Fax</option>
+						<option value="Credit Card">Credit Card</option>
+						<option value="Global">Global Phone</option>
+						<option value="Cordless">Cordless</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="cableform">Patch Cable</label>
+					<select class="form-control" id="cableform" name="cableform">
+						<option value="0">n/a</option>
+						<option value="1">1 ft</option>
+						<option value="7">7 ft</option>
+						<option value="10">10 ft</option>
+						<option value="15">15 ft</option>
+					</select>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="spaceoptions" id="spaceoption1" value="Open" checked>
+					<label class="form-check-label" for="spaceoption1">Public Space Phone&nbsp;&nbsp;</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="spaceoptions" id="spaceoption2" value="Private">
+					<label class="form-check-label" for="spaceoption2">Private Phone</label>
+				</div>
+				<div class="form-group" id="divfirstname" hidden>
+					<label id="firstnamelabel" for="firstnameform">First Name</label>
+					<input type="text" id="firstnameform" class="form-control" placeholder="First Name">
+				</div>
+				<div class="form-group" id="divlastname" hidden>
+					<label id="lastnamelabel" for="lastnameform">Last Name</label>
+					<input type="text" id="lastnameform" class="form-control" placeholder="Last Name">
+				</div>
+				<div class="form-group">
+					<label for="deptform">Department</label>
+					<input type="text" id="deptform" class="form-control" placeholder="Enter Department Here">
+				</div>
+				<div class="form-group">
+					<label for="roomform">Room #</label>
+					<input type="text" id="roomform" class="form-control" placeholder="Enter Room # or Name">
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox" id="voicemailform">
+					<label class="form-check-label" for="voicemailform">VM&nbsp;&nbsp;</label>
+					<input class="form-check-input" type="checkbox" id="wallmountform">
+					<label class="form-check-label" for="wallmountform">Wallmount&nbsp;&nbsp;</label>
+					<input class="form-check-input" type="checkbox" id="dualhandform">
+					<label class="form-check-label" for="dualhandform">Dualhand</label>
+				</div>
+				<div class="form-group">
+					<textarea class="form-control" id="phonetextform"  rows="5" placeholder="Add Notes Here"></textarea>
+				</div>
+				<div class="form-group">
+				    <label for="fileToUpload" class="camera-file-upload"><i class="fa fa-camera"></i>&nbsp;&nbsp;Take Photo</label><br />
+					<input style="display:none" type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" accept="image/*" capture="camera" />
+				</div>
+				<div class="form-group" id="details"></div>
+				<div class="form-group" id="progress"></div>
+				<div class="text-right">
+					<button type="button" id="survey_submit" onclick="manage_phone_survey(<?php echo $SITE_ID . ",'" . $SITE_NAME . "',5000,'custom'"; ?>)" class="btn btn-primary"><i class="fa fa-paper-plane" aria-hidden="true"></i> Submit</button>
+				</div>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+	<!-- Notification DOMS or backtotop from here -->
+    <div class="totop">
+    	<a class="btn btn-primary" id="totop"><i class="fa fa-chevron-up"></i></a>
+    </div>
+
+    <!-- Fly Notifications -->
+    <div class="notification bottom blue">
+		<div class="content">
+			<button type="button" class="close pull-right notification-close"><span aria-hidden="true">×</span></button>
+			<h4>Notification Title</h4>
+			<p>Notification Content Lorem ipsum dolor sit amet
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
+		</div>
+	</div>
+
+	<div class="notification top red">
+		<div class="content">
+			<button type="button" class="close pull-right notification-close"><span aria-hidden="true">×</span></button>
+			<h4>Notification Title</h4>
+			<p>Notification Content Lorem ipsum dolor sit amet
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
+		</div>
+	</div>
+
+	<div class="notification top green">
+		<div class="content">
+			<button type="button" class="close pull-right notification-close"><span aria-hidden="true">×</span></button>
+			<h4>Notification Title</h4>
+			<p>Notification Content Lorem ipsum dolor sit amet
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
+		</div>
+	</div>
+
+	<div class="notification bottom red">
+		<div class="content">
+			<button type="button" class="close pull-right notification-close"><span aria-hidden="true">×</span></button>
+			<h4>Notification Title</h4>
+			<p>Notification Content Lorem ipsum dolor sit amet
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
+		</div>
+	</div>
+
+	<div class="notification bottom green">
+		<div class="content">
+			<button type="button" class="close pull-right notification-close"><span aria-hidden="true">×</span></button>
+			<h4>Notification Title</h4>
+			<p>Notification Content Lorem ipsum dolor sit amet
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
+		</div>
+	</div>
+
+	<?php include("javascript.php"); ?>
+	
+	<script type="text/javascript">
+		$(".loadmore").on("click",function(){
+			var dom = $("#"+$(this).attr("data-loader"));
+			if (dom.length){
+				$(dom).addClass("pop");
+				setTimeout(function(){
+					dom.removeClass("pop");
+				},Math.random()*3000);
+			}
+		});
+
+		// You can use Toast as in Native android,
+		// if you are showing on page load then its better to call it inside window on load function,
+		// if you are not calling on page load but some event then you are free to remove window 	load function.
+		// toast(msg,delay,color);
+		$(window).on("load",function(){
+		    toast("Loading phone list...",1000);
+		});
+
+
+		// Just call .notify() on the notification doms which are already prepared and you are ready to go whenever you want on an event or ajax calls its all flexible.
+		$("#notify").click(function(){
+			$(".notification.bottom.red").notify();
+		});
+		
+		$(document).ready(function(){
+		  $("#search").on("keyup", function() {
+			var value = $(this).val().toLowerCase();
+			$("#myList li").filter(function() {
+			  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			});
+		  });
+
+		});
+		
+				function fileSelected() {
+        var count = document.getElementById('fileToUpload').files.length;
+              document.getElementById('details').innerHTML = "";
+              for (var index = 0; index < count; index ++)
+              {
+                     var file = document.getElementById('fileToUpload').files[index];
+                     var fileSize = 0;
+                     if (file.size > 1024 * 1024)
+                            fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+                     else
+                            fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+                     document.getElementById('details').innerHTML += 'Name: ' + file.name + '<br>Size: ' + fileSize + '<br>Type: ' + file.type;
+                     document.getElementById('details').innerHTML += '<p>';
+              }
+      }
+	  
+	  function update_fileSelected() {
+        var count = document.getElementById('update_fileToUpload').files.length;
+              document.getElementById('update_details').innerHTML = "";
+              for (var index = 0; index < count; index ++)
+              {
+                     var file = document.getElementById('update_fileToUpload').files[index];
+                     var fileSize = 0;
+                     if (file.size > 1024 * 1024)
+                            fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+                     else
+                            fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+                     document.getElementById('update_details').innerHTML += 'Name: ' + file.name + '<br>Size: ' + fileSize + '<br>Type: ' + file.type;
+                     document.getElementById('update_details').innerHTML += '<p>';
+              }
+      }
+	  
+      function manage_phone_survey(siteid,sitename,phoneid,action) {
+
+		
+		switch(action) {
+			case "add":
+					var phone_name = document.getElementById("phonenameform").value;
+					var spaceoption1 = document.getElementById("spaceoption1").value;
+					var spaceoption2 = document.getElementById("spaceoption2").value;
+					var firstname = document.getElementById("firstnameform").value;
+					var lastname = document.getElementById("lastnameform").value;
+					var dept = document.getElementById("deptform").value;
+					var room = document.getElementById("roomform").value;
+					var type = document.getElementById("typeform").value;
+					var voicemail = document.getElementById("voicemailform");
+					var wallmount = document.getElementById("wallmountform");
+					var dualhandset = document.getElementById("dualhandform");
+					var cable = document.getElementById("cableform").value;
+					var notes = document.getElementById("phonetextform").value;
+				  var fd = new FormData();
+				  var count = document.getElementById('fileToUpload').files.length;
+				  for (var index = 0; index < count; index ++)
+				  {
+						 var file = document.getElementById('fileToUpload').files[index];
+						 fd.append('myFile', file);
+				  }
+			break;
+			case "update":
+					var phone_name = document.getElementById("update_phonenameform").value;
+					var spaceoption1 = document.getElementById("update_spaceoption1").value;
+					var spaceoption2 = document.getElementById("update_spaceoption2").value;
+					var firstname = document.getElementById("update_firstnameform").value;
+					var lastname = document.getElementById("update_lastnameform").value;
+					var dept = document.getElementById("update_deptform").value;
+					var room = document.getElementById("update_roomform").value;
+					var type = document.getElementById("update_typeform").value;
+					var voicemail = document.getElementById("update_voicemailform");
+					var wallmount = document.getElementById("update_wallmountform");
+					var dualhandset = document.getElementById("update_dualhandform");
+					var cable = document.getElementById("update_cableform").value;
+					var notes = document.getElementById("update_phonetextform").value;
+				  var fd = new FormData();
+				  var count = document.getElementById('update_fileToUpload').files.length;
+				  for (var index = 0; index < count; index ++)
+				  {
+						 var file = document.getElementById('update_fileToUpload').files[index];
+						 fd.append('myFile', file);
+				  }
+			break;
+			case "custom":
+					var phone_name = document.getElementById("phonenameform").value;
+					var spaceoption1 = document.getElementById("spaceoption1").value;
+					var spaceoption2 = document.getElementById("spaceoption2").value;
+					var firstname = document.getElementById("firstnameform").value;
+					var lastname = document.getElementById("lastnameform").value;
+					var dept = document.getElementById("deptform").value;
+					var room = document.getElementById("roomform").value;
+					var type = document.getElementById("typeform").value;
+					var voicemail = document.getElementById("voicemailform");
+					var wallmount = document.getElementById("wallmountform");
+					var dualhandset = document.getElementById("dualhandform");
+					var cable = document.getElementById("cableform").value;
+					var notes = document.getElementById("phonetextform").value;
+				  var fd = new FormData();
+				  var count = document.getElementById('fileToUpload').files.length;
+				  for (var index = 0; index < count; index ++)
+				  {
+						 var file = document.getElementById('fileToUpload').files[index];
+						 fd.append('myFile', file);
+				  }
+			break;
+			
+		}
+
+        var xhr = new XMLHttpRequest();
+		
+		switch(action) {
+			case "custom":
+				xhr.upload.addEventListener("progress", uploadProgress, false);
+			break;
+		}
+        xhr.addEventListener("load", uploadComplete, false);
+        xhr.addEventListener("error", uploadFailed, false);
+        xhr.addEventListener("abort", uploadCanceled, false);
+		
+		switch(action) {
+			case "custom":
+				var url = "https://fqdn/manage-survey.php?siteid=" + siteid 
+															+ "&phoneid=" + phoneid
+															+ "&phonename=" + phone_name
+															+ "&firstname=" + firstname
+															+ "&lastname=" + lastname
+															+ "&dept=" + dept
+															+ "&room=" + room
+															+ "&voicemail=" + voicemail.checked
+															+ "&wallmount=" + wallmount.checked
+															+ "&dualhandset=" + dualhandset.checked
+															+ "&phonetype=" + type
+															+ "&sitename=" + sitename
+															+ "&cable=" + cable
+															+ "&action=" + action
+															+ "&notes=" + notes
+				xhr.open("POST", url
+				);
+			break;
+		}
+
+        xhr.send(fd);
+      }
+		
+		function uploadProgress(evt) {
+        if (evt.lengthComputable) {
+          var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+          document.getElementById('progress').innerHTML = percentComplete.toString() + '%';
+        }
+        else {
+          document.getElementById('progress').innerHTML = 'unable to compute';
+        }
+      }
+	  
+	  function update_uploadProgress(evt) {
+        if (evt.lengthComputable) {
+          var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+          document.getElementById('update_progress').innerHTML = percentComplete.toString() + '%';
+        }
+        else {
+          document.getElementById('update_progress').innerHTML = 'unable to compute';
+        }
+      }
+	  
+      function uploadComplete(evt) {
+        /* This event is raised when the server send back a response */
+        //alert(evt.target.responseText);
+		switch(evt.target.responseText) {
+			case "add okay":
+				location.reload();
+				break;
+			case "delete okay":
+				location.reload();
+				break;
+			case "failed":
+			
+				break;
+			case "update okay":
+				location.reload();
+				break;
+			case "custom okay":
+				window.history.back();
+				break;
+			default:
+				alert(evt.target.responseText);
+				break;
+		}
+      }
+	  
+      function uploadFailed(evt) {
+        alert("There was an error attempting to upload the file.");
+      }
+	  
+      function uploadCanceled(evt) {
+        alert("The upload has been canceled by the user or the browser dropped the connection.");
+      }
+	</script>
+
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
