@@ -9,21 +9,21 @@ Installation steps:
 1. chmod /site_photo directory for 755 for directory and 655 for files
 2. modify config.php
 
-    $protocol = "https://";<br/>
-    $rootpath = "domain name";<br/>
+    $protocol = "https://"; <br/>
+    $rootpath = "domain name"; <br/>
 
-    $mysql_server = "<host>";<br/>
-    $mysql_username = "<mysql account>";<br/>
-    $mysql_password = "<mysql_password>";<br/>
-    $mysql_db = "<table>";<br/>
+    $mysql_server = "<host>"; <br/>
+    $mysql_username = "<mysql account>"; <br/>
+    $mysql_password = "<mysql_password>"; <br/>
+    $mysql_db = "<table_name>"; <br/>
 
 3. modify authenticate.php
 
-   $DATABASE_HOST = "<host>";<br/>
-   $DATABASE_USER = "<mysql_account>";<br/>
-   $DATABASE_PASS = "<mysql_password>";<br/>
-   $DATABASE_NAME = "<table>";<br/>
-   
+   $DATABASE_HOST = "<host>"; <br/>
+   $DATABASE_USER = "<mysql_account>"; <br/>
+   $DATABASE_PASS = "<mysql_password>"; <br/>
+   $DATABASE_NAME = "<table_name>"; <br/>
+    
 4.  Add .htaccess to root directory for URLRewrite
 
     AddType application/x-httpd-php .html .htm<br/>
