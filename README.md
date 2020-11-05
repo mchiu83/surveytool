@@ -19,10 +19,10 @@ Installation steps:
 
 3. modify authenticate.php
 
-   $DATABASE_HOST = '<host>';<br/>
-   $DATABASE_USER = '<mysql_account>';<br/>
-   $DATABASE_PASS = '<mysql_password>';<br/>
-   $DATABASE_NAME = '<table>';<br/>
+   $DATABASE_HOST = "<host>";<br/>
+   $DATABASE_USER = "<mysql_account>";<br/>
+   $DATABASE_PASS = "<mysql_password>";<br/>
+   $DATABASE_NAME = "<table>";<br/>
    
 4.  Add .htaccess to root directory for URLRewrite
 
